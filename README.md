@@ -46,7 +46,7 @@ xcd -c	Clear the memory file
 xcd -h	Display full help
 ✔ Symlink-safe home handling
 
-If your home directory is a symlink (e.g. /home/blake → /drive1/ROOT/home/blake), xcd automatically normalizes paths so your shell prompt still displays ~ correctly.
+If your home directory is a symlink (e.g. /home/XXXX → /drive1/ROOT/home/XXXX), xcd automatically normalizes paths so your shell prompt still displays ~ correctly.
 
 ## 📦 Installation
 
