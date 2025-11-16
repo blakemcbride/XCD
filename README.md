@@ -216,9 +216,5 @@ work exactly like Linux.
 
 All final decisions, integration, and architecture are by Blake McBride.
 
----
 
-## License
-
-Choose any license you prefer — MIT, BSD, Apache, GPL, Unlicense, etc.
 
