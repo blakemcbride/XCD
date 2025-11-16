@@ -206,12 +206,12 @@ work exactly like Linux.
 
 ## Attribution
 
-**Primary author:**  
-**Blake McBride**  
+**Primary author:  Blake McBride**  
+
 - Concept, design, directory memory behavior, matching rules, wrappers, and cross‑platform integration.
 
-**AI-assisted implementation:**  
-**ChatGPT (OpenAI)**  
+**AI-assisted implementation:  ChatGPT (OpenAI)**  
+
 - Help generating and refining core logic, wrappers, documentation, and debugging.
 
 All final decisions, integration, and architecture are by Blake McBride.
