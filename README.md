@@ -1,243 +1,225 @@
-# 🌀 xcd – A Smarter cd Command for Linux and Windows
+# xcd  
+A cross-platform, fuzzy directory jumper for **Linux**, **macOS**, and **Windows**
 
-*xcd* is an enhanced replacement for the standard *cd* command.
-On Linux it is implemented as a bash function, and on Windows it is implemented as a combination of a helper program (`xcd.exe`) and a lightweight command wrapper (`xcd.cmd`).
+`xcd` is a smart replacement for `cd` that remembers directories you visit and lets you jump back to them using short “segments” of their name. It behaves like a more intuitive, memory-based `cd`.
 
-Across both platforms, *xcd* remembers directories you visit, supports fuzzy navigation by directory name, and provides cycle previews, listing, and automatic memory pruning.
+Examples:
 
-It makes navigating large projects, monorepos, multi-directory environments, and development trees dramatically faster.
-
-## 🌐 Features (Both Platforms)
-✔ Smart directory memory
-
-Every successful *xcd* stores a full absolute path in a memory file:
-
-Linux: `~/.xcd_memory`
-
-Windows: `%USERPROFILE%\.xcd_memory`
-
-Dead directories are auto-removed.
-
-✔ Fuzzy navigation
-
-Running:
-
-`xcd Backend`
-
-
-finds directories whose final path component contains the string “Backend”.
-
-If multiple matches exist:
-
-First call goes to the first match
-
-Next call goes to the second
-
-Continues cycling with wrap-around
-
-✔ Listing and preview options
-```
-    Command          Purpose
-    xcd -l           List all remembered directories
-    xcd -l segment   List directories containing “segment” in the basename
-    xcd -p segment   Preview matches and see which directory xcd segment will jump to next
-    xcd -c           Clear the memory file
-    xcd -h           Help message describing behavior
+```bash
+xcd Backend         # jumps to a remembered directory whose basename contains "Backend"
+xcd api             # cycles through directories whose basename contains "api"
+xcd -l              # lists all remembered directories
+xcd -p Backend      # previews which directory "xcd Backend" would choose next
 ```
 
-## 🐧 Linux Version (Bash Function)
+`xcd` automatically:
 
-The Linux version is a pure Bash function that runs inside your shell, which allows it to actually change directories (scripts cannot).
-It supports:
+- Remembers every directory you **start in**
+- Remembers every directory you **jump to**
+- Stores only **canonical, unique** paths  
+- Lets you fuzzy-match on the final path segment  
+- Cycles through matches intelligently  
+- Works uniformly across Linux, macOS, and Windows  
 
-Argument handling identical to cd
+Internally, `xcd` has two components:
 
-Fuzzy matching and cycling
+- A **C core** that contains all matching/logic  
+  - `xcd-core` on Linux/macOS  
+  - `xcd-win.exe` on Windows  
+- A **thin wrapper**  
+  - `xcd.sh` on Linux/macOS  
+  - `xcd.cmd` on Windows  
 
-`-l, -p, -c, -h`
+Users type only `xcd`. The wrapper handles `cd` and the core handles everything else.
 
-Auto-pruning of memory entries
+All wrapper files are provided in the repository.
 
-Symlink-aware home handling (e.g., /home/XXXX -> /drive1/...)
+---
 
-Persistent memory stored in `~/.xcd_memory`
+# Features
 
-## 📦 Installing on Linux
+### ✔ Drop-in replacement for `cd`
+Just type `xcd` exactly as you would `cd`, with extra powers.
 
-1. Add *xcd* to your shell startup
-
-Copy the full *xcd* function into your ~/.bashrc.
-For example:
-
-`nano ~/.bashrc`
-
-
-Paste the entire function.
-
-Then reload your shell:
-
-`source ~/.bashrc`
-
-
-Or open a new terminal.
-
-2. Optional: put it in a separate file
-
-If you want a cleaner `~/.bashrc`:
+### ✔ Fuzzy directory matching
+```bash
+xcd Backend
+xcd logs
+xcd api
 ```
-    mkdir -p ~/.local/share/xcd
-    cp xcd.bash ~/.local/share/xcd/xcd.bash
+Matches directories whose **basename** contains the given segment.
+
+### ✔ Cycling between matches
+If multiple directories match a segment, repeated `xcd segment` cycles through them.
+
+### ✔ Canonical path storage
+All paths are normalized via:
+
+- `realpath()` on Linux/macOS  
+- `_fullpath()` on Windows  
+
+Ensuring uniqueness and predictable behavior.
+
+### ✔ Stores two directories per navigation:
+1. The directory in which you *ran* `xcd`
+2. The directory that `xcd` *takes you to*
+
+### ✔ Management commands
 ```
-
-Then add to `~/.bashrc`:
-
-`source ~/.local/share/xcd/xcd.bash`
-
-3. Verify installation
-
-Run:
-
-`xcd -h`
-
-
-You should see the full help message.
-
-Try jumping around:
-```
-    xcd /etc
-    xcd
-    xcd -l
+xcd -l           # list all remembered directories
+xcd -l segment   # list only matches
+xcd -p segment   # preview what 'xcd segment' would do next
+xcd -c           # clear memory
+xcd -h           # help
 ```
 
-Try fuzzy navigation:
+### ✔ Cross-platform
+- Linux (Bash)
+- macOS (zsh or Bash)
+- Windows (CMD)
 
-`xcd etc`
+---
 
+# Memory File
 
-Try cycling:
+All platforms use:
+
 ```
-    xcd src
-    xcd src
-    xcd src
-```
-4. Removing / resetting
-
-At any time:
-
-`xcd -c`
-
-
-clears `~/.xcd_memory` completely.
-
-Or remove the function from `~/.bashrc`.
-
-## 🪟 Windows Version (C Program + CMD Wrapper)
-
-Because Windows executables cannot change the current shell directory,
-*xcd* is implemented as:
-
-`xcd.exe`
-
-Computes the target directory
-
-Updates memory
-
-Writes the chosen directory into a temporary file
-
-`xcd.cmd`
-
-Runs `xcd.exe`
-
-Reads the temporary file
-
-Performs the actual `cd`
-
-Deletes the temporary file
-
-### 📦 Installing on Windows
-
-1. Build or download xcd.exe
-
-Visual Studio:
-
-`cl /EHsc xcd.c`
-
-
-MinGW:
-
-`gcc -o xcd.exe xcd.c`
-
-
-Place xcd.exe somewhere on your `PATH` — for example:
-
-`C:\Users\<you>\bin\xcd.exe`
-
-2. Create `xcd.cmd`
-
-Place this file in the same directory as xcd.exe:
-```
-    @echo off
-    setlocal
-
-    "%USERPROFILE%\bin\xcd.exe" %*
-
-    if errorlevel 1 (
-        exit /b %errorlevel%
-    )
-
-    set TEMPFILE=%TEMP%\xcd_target.txt
-    if not exist "%TEMPFILE%" exit /b 1
-
-    set /p TARGET_DIR=<"%TEMPFILE%"
-    cd /d "%TARGET_DIR%"
-
-    del "%TEMPFILE%" >nul 2>&1
-    endlocal
+~/.xcd_memory
 ```
 
-Now you can:
+which contains canonical absolute paths like:
+
 ```
-    xcd Backend
-    xcd -l
-    xcd -p Core
-    xcd -c
+/home/blake/projects/foo
+/home/blake/src/backend
+/drive1/ROOT/home/blake/Stack360
+C:\Users\Blake\Documents\XCD
 ```
 
-just like on Linux.
+Duplicates are avoided automatically.
 
-## 🧠 How Memory Works (Both Platforms)
+---
 
-The memory file is:
+# Installation
 
-* simple plain text
+# Linux / macOS
 
-* one directory per line
+## 1. Build the C core
 
-* automatically deduplicated
+```bash
+gcc -std=c11 -Wall -O2 -o xcd-core xcd-core.c
+```
 
-* automatically pruned when a directory vanishes
+Place it on your PATH:
 
-Linux path:
+```bash
+mkdir -p ~/.local/bin
+mv xcd-core ~/.local/bin/
+```
 
-`~/.xcd_memory`
+Ensure `~/.local/bin` is on your PATH.
 
+---
 
-Windows path:
+## 2. Source the provided wrapper (`xcd.sh`)
 
-`%USERPROFILE%\.xcd_memory`
+In `~/.bashrc` (Linux) or `~/.zshrc` (macOS):
 
+```bash
+source /full/path/to/xcd.sh
+```
 
-You can edit or delete it manually if desired.
+Reload:
 
-## 🤝 Authors & Attribution
+```bash
+source ~/.bashrc    # or ~/.zshrc
+```
 
-Primary Author
+### macOS notes
+- macOS already includes `/bin/bash`; **you do NOT need to install Bash**.
+- The included `xcd.sh` wrapper is **POSIX-compatible**, so it works when sourced from `zsh`.
 
-Blake McBride
-Creator, maintainer, and architect of the *xcd* project on both Linux and Windows.
+---
 
-Assisted by
+# Windows
 
-ChatGPT (OpenAI) — used as a development and documentation tool.
-All final design decisions and modifications were made by the project author.
+Windows uses:
+
+- `xcd-win.exe` (compiled from `xcd-win.c`)
+- `xcd.cmd` (wrapper that performs the actual directory change)
+
+Users type only:
+
+```
+xcd
+```
+
+---
+
+## 1. Build the Windows C core
+
+Using MSVC:
+
+```cmd
+cl /EHsc xcd-win.c /Fe:xcd-win.exe
+```
+
+Using MinGW:
+
+```cmd
+gcc -Wall -O2 -o xcd-win.exe xcd-win.c
+```
+
+---
+
+## 2. Install `xcd-win.exe` and `xcd.cmd`
+
+```cmd
+mkdir %USERPROFILE%\bin
+copy xcd-win.exe %USERPROFILE%\bin\
+copy xcd.cmd %USERPROFILE%\bin\
+```
+
+Ensure `%USERPROFILE%\bin` is on your PATH.
+
+Now commands like:
+
+```cmd
+xcd Backend
+xcd -l
+xcd -p Backend
+xcd -c
+```
+
+work exactly like Linux.
+
+### How it works
+
+1. `xcd.cmd` runs  
+2. Calls `xcd-win.exe`  
+3. Core writes target directory to `%TEMP%\xcd_target.txt`  
+4. Wrapper reads file  
+5. Wrapper performs `cd /d <target>`  
+6. Deletes the temp file  
+
+---
+
+# Attribution
+
+**Primary author:**  
+**Blake McBride**  
+- Concept, design, directory memory behavior, matching rules, wrappers, and cross‑platform integration.
+
+**AI-assisted implementation:**  
+**ChatGPT (OpenAI)**  
+- Help generating and refining core logic, wrappers, documentation, and debugging.
+
+All final decisions, integration, and architecture are by Blake McBride.
+
+---
+
+# License
+
+Choose any license you prefer — MIT, BSD, Apache, GPL, Unlicense, etc.
 
