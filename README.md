@@ -1,4 +1,4 @@
-🌀 xcd – A Smarter cd Command for Bash
+# 🌀 xcd – A Smarter cd Command for Bash
 
 xcd is a feature-enhanced replacement for the standard cd command in GNU Bash.
 It remembers directories you’ve visited, supports intelligent fuzzy navigation by name,
@@ -6,7 +6,7 @@ and adds convenient listing, cycling, preview, and maintenance features — all 
 
 This tool is ideal for developers working across many directories, large codebases, or multi-repo environments.
 
-✨ Features
+## ✨ Features
 ✔ Smart directory memory
 
 Every successful call to xcd stores the absolute physical path of the directory in ~/.xcd_memory.
@@ -48,7 +48,7 @@ xcd -h	Display full help
 
 If your home directory is a symlink (e.g. /home/blake → /drive1/ROOT/home/blake), xcd automatically normalizes paths so your shell prompt still displays ~ correctly.
 
-📦 Installation
+## 📦 Installation
 
 Add the following line to your ~/.bashrc:
 
@@ -64,7 +64,7 @@ source ~/.bashrc
 
 You’re ready to use xcd.
 
-🧠 Usage Examples
+## 🧠 Usage Examples
 Jump to a directory and remember it
 xcd ~/projects/myapp
 
@@ -81,7 +81,7 @@ xcd -p Backend
 List all remembered directories
 xcd -l
 
-📁 Memory File
+## 📁 Memory File
 
 xcd stores its persistent directory memory here:
 
@@ -98,7 +98,7 @@ auto-cleaned on every invocation
 
 safe to edit or delete manually
 
-🧑‍💻 Authors & Attribution
+## 🧑‍💻 Authors & Attribution
 Primary Author
 
 Blake McBride
