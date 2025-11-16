@@ -35,7 +35,7 @@ All wrapper files are provided in the repository.
 
 ---
 
-# Features
+## Features
 
 ### ✔ Drop-in replacement for `cd`
 Just type `xcd` exactly as you would `cd`, with extra powers.
@@ -79,7 +79,7 @@ xcd -h           # help
 
 ---
 
-# Memory File
+## Memory File
 
 All platforms use:
 
@@ -100,11 +100,11 @@ Duplicates are avoided automatically.
 
 ---
 
-# Installation
+## Installation
 
-# Linux / macOS
+### Linux / macOS
 
-## 1. Build the C core
+1. Build the C core
 
 ```bash
 gcc -std=c11 -Wall -O2 -o xcd-core xcd-core.c
@@ -121,7 +121,7 @@ Ensure `~/.local/bin` is on your PATH.
 
 ---
 
-## 2. Source the provided wrapper (`xcd.sh`)
+2. Source the provided wrapper (`xcd.sh`)
 
 In `~/.bashrc` (Linux) or `~/.zshrc` (macOS):
 
@@ -141,7 +141,7 @@ source ~/.bashrc    # or ~/.zshrc
 
 ---
 
-# Windows
+## Windows
 
 Windows uses:
 
@@ -156,7 +156,7 @@ xcd
 
 ---
 
-## 1. Build the Windows C core
+1. Build the Windows C core
 
 Using MSVC:
 
@@ -172,7 +172,7 @@ gcc -Wall -O2 -o xcd-win.exe xcd-win.c
 
 ---
 
-## 2. Install `xcd-win.exe` and `xcd.cmd`
+2. Install `xcd-win.exe` and `xcd.cmd`
 
 ```cmd
 mkdir %USERPROFILE%\bin
@@ -204,7 +204,7 @@ work exactly like Linux.
 
 ---
 
-# Attribution
+## Attribution
 
 **Primary author:**  
 **Blake McBride**  
@@ -218,7 +218,7 @@ All final decisions, integration, and architecture are by Blake McBride.
 
 ---
 
-# License
+## License
 
 Choose any license you prefer — MIT, BSD, Apache, GPL, Unlicense, etc.
 
