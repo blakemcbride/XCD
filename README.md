@@ -36,12 +36,14 @@ Next call goes to the second
 Continues cycling with wrap-around
 
 ✔ Listing and preview options
+```
     Command	Purpose
     xcd -l	List all remembered directories
     xcd -l segment	List directories containing “segment” in the basename
     xcd -p segment	Preview matches and see which directory xcd segment will jump to next
     xcd -c	Clear the memory file
     xcd -h	Help message describing behavior
+```
 
 ## 🐧 Linux Version (Bash Function)
 
