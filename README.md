@@ -4,122 +4,174 @@ xcd is an enhanced replacement for the standard cd command.
 On Linux it is implemented as a bash function, and on Windows it is implemented as a combination of a helper program (xcd.exe) and a lightweight command wrapper (xcd.cmd).
 
 Across both platforms, xcd remembers directories you visit, supports fuzzy navigation by directory name, and provides cycle previews, listing, and automatic memory pruning.
-It makes moving around large projects or multi-directory environments dramatically faster.
+
+It makes navigating large projects, monorepos, multi-directory environments, and development trees dramatically faster.
 
 ## 🌐 Features (Both Platforms)
 ✔ Smart directory memory
 
-Every successful xcd invocation stores a full absolute path in:
+Every successful xcd stores a full absolute path in a memory file:
 
 Linux: ~/.xcd_memory
 
 Windows: %USERPROFILE%\.xcd_memory
 
-Dead directories are automatically pruned.
+Dead directories are auto-removed.
 
 ✔ Fuzzy navigation
+
+Running:
+
 xcd Backend
 
 
-finds directories whose final path component contains “Backend”.
+finds directories whose final path component contains the string “Backend”.
 
 If multiple matches exist:
 
-The first xcd Backend jumps to the first match
+First call goes to the first match
 
-Repeating xcd Backend cycles to the next
+Next call goes to the second
 
-It wraps around when it reaches the end
-
-✔ Directory cycling
-xcd proj    # jumps to match #1
-xcd proj    # jumps to match #2
-xcd proj    # back to match #1
+Continues cycling with wrap-around
 
 ✔ Listing and preview options
 Command	Purpose
 xcd -l	List all remembered directories
-xcd -l segment	List directories with basename matching segment
-xcd -p segment	Show what matches exist and which will be chosen next
+xcd -l segment	List directories containing “segment” in the basename
+xcd -p segment	Preview matches and see which directory xcd segment will jump to next
 xcd -c	Clear the memory file
-xcd -h	Help message
+xcd -h	Help message describing behavior
+🐧 Linux Version (Bash Function)
 
-## 🐧 Linux Version (Bash)
-
-The Linux version is a pure bash function that must be added to your ~/.bashrc.
-
+The Linux version is a pure Bash function that runs inside your shell, which allows it to actually change directories (scripts cannot).
 It supports:
 
-cd-compatible behavior
+Argument handling identical to cd
 
-Fuzzy matching
+Fuzzy matching and cycling
 
-Cycling through matches
+-l, -p, -c, -h
 
--h, -l, -c, -p options
+Auto-pruning of memory entries
 
-Home-directory normalization
+Symlink-aware home handling (e.g., /home/blake -> /drive1/...)
 
-Automatic pruning
+Persistent memory stored in ~/.xcd_memory
 
-Persistent directory memory
+## 📦 Installing on Linux
+1. Add xcd to your shell startup
 
-See the code in xcd.bash or your .bashrc as appropriate.
+Copy the full xcd function into your ~/.bashrc.
+For example:
+
+nano ~/.bashrc
+
+
+Paste the entire function.
+
+Then reload your shell:
+
+source ~/.bashrc
+
+
+Or open a new terminal.
+
+2. Optional: put it in a separate file
+
+If you want a cleaner ~/.bashrc:
+
+mkdir -p ~/.local/share/xcd
+cp xcd.bash ~/.local/share/xcd/xcd.bash
+
+
+Then add to ~/.bashrc:
+
+source ~/.local/share/xcd/xcd.bash
+
+3. Verify installation
+
+Run:
+
+xcd -h
+
+
+You should see the full help message.
+
+Try jumping around:
+
+xcd /etc
+xcd
+xcd -l
+
+
+Try fuzzy navigation:
+
+xcd etc
+
+
+Try cycling:
+
+xcd src
+xcd src
+xcd src
+
+4. Removing / resetting
+
+At any time:
+
+xcd -c
+
+
+clears ~/.xcd_memory completely.
+
+Or remove the function from ~/.bashrc.
 
 ## 🪟 Windows Version (C Program + CMD Wrapper)
 
-Because Windows executables cannot change the parent shell’s working directory,
-the Windows version uses a two-part model:
+Because Windows executables cannot change the current shell directory,
+xcd is implemented as:
 
 xcd.exe
 
-Written in C
-
 Computes the target directory
 
-Updates the persistent memory file
+Updates memory
 
-Writes the chosen directory to a temp file:
-
-%TEMP%\xcd_target.txt
-
+Writes the chosen directory into a temporary file
 
 xcd.cmd
 
-A wrapper that:
-
 Runs xcd.exe
 
-Reads the temp file
+Reads the temporary file
 
-Changes the directory in the current CMD session
+Performs the actual cd
 
-Deletes the temp file
+Deletes the temporary file
 
-This pattern matches the approach used by popular directory jumpers like zoxide, fasd, and fzf.
+This approach is identical to how tools like fzf, autojump, and zoxide work on Windows.
 
-## 📦 Installing the Windows Version
+### 📦 Installing on Windows
 1. Build or download xcd.exe
 
-Compile with Visual Studio:
+Visual Studio:
 
 cl /EHsc xcd.c
 
 
-Or MinGW:
+MinGW:
 
 gcc -o xcd.exe xcd.c
 
 
-Copy xcd.exe somewhere on your PATH, such as:
+Place xcd.exe somewhere on your PATH—for example:
 
 C:\Users\<you>\bin\xcd.exe
 
 2. Create xcd.cmd
 
-Place this file in the same directory as xcd.exe and ensure that directory is on your PATH.
-
-xcd.cmd:
+Place this file in the same directory as xcd.exe:
 
 @echo off
 setlocal
@@ -140,47 +192,48 @@ del "%TEMPFILE%" >nul 2>&1
 endlocal
 
 
-Now you can use:
+Now you can:
 
 xcd Backend
 xcd -l
-xcd -p Api
+xcd -p Core
 xcd -c
 
 
 just like on Linux.
 
-## 🧠 How Windows Memory Works
+## 🧠 How Memory Works (Both Platforms)
 
-Memory file (same concept as Linux):
+The memory file is:
+
+simple plain text
+
+one directory per line
+
+automatically deduplicated
+
+automatically pruned when a directory vanishes
+
+Linux path:
+
+~/.xcd_memory
+
+
+Windows path:
 
 %USERPROFILE%\.xcd_memory
 
 
-Each line stores an absolute directory path.
-
-xcd.exe:
-
-loads this file
-
-prunes dead entries
-
-performs fuzzy matching
-
-chooses the target directory
-
-writes the final choice to %TEMP%\xcd_target.txt
-
-xcd.cmd then performs the actual directory change.
+You can edit or delete it manually if desired.
 
 ## 🤝 Authors & Attribution
 Primary Author
 
 Blake McBride
-Creator, maintainer, and architect of xcd on both Linux and Windows.
+Creator, maintainer, and architect of the xcd project on both Linux and Windows.
 
 Assisted by
 
-ChatGPT (OpenAI) — used as a development tool for code generation, planning, debugging, and documentation assistance.
-All final code decisions and designs were made by the project author.
+ChatGPT (OpenAI) — used as a development and documentation tool.
+All final design decisions and modifications were made by the project author.
 
