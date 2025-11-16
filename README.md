@@ -1,5 +1,4 @@
-# xcd  
-A cross-platform, fuzzy directory jumper for **Linux**, **macOS**, and **Windows**
+# xcd - A cross-platform, fuzzy directory jumper for **Linux**, **macOS**, and **Windows**
 
 `xcd` is a smart replacement for `cd` that remembers directories you visit and lets you jump back to them using short “segments” of their name. It behaves like a more intuitive, memory-based `cd`.
 
@@ -91,10 +90,10 @@ All platforms use:
 which contains canonical absolute paths like:
 
 ```
-/home/blake/projects/foo
-/home/blake/src/backend
-/drive1/ROOT/home/blake/Stack360
-C:\Users\Blake\Documents\XCD
+/home/XXXX/projects/foo
+/home/XXXX/src/backend
+/drive1/ROOT/home/XXXX/Stack360
+C:\Users\XXXX\Documents\XCD
 ```
 
 Duplicates are avoided automatically.
