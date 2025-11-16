@@ -1,9 +1,9 @@
 # 🌀 xcd – A Smarter cd Command for Linux and Windows
 
-xcd is an enhanced replacement for the standard cd command.
+*xcd* is an enhanced replacement for the standard *cd* command.
 On Linux it is implemented as a bash function, and on Windows it is implemented as a combination of a helper program (xcd.exe) and a lightweight command wrapper (xcd.cmd).
 
-Across both platforms, xcd remembers directories you visit, supports fuzzy navigation by directory name, and provides cycle previews, listing, and automatic memory pruning.
+Across both platforms, *xcd* remembers directories you visit, supports fuzzy navigation by directory name, and provides cycle previews, listing, and automatic memory pruning.
 
 It makes navigating large projects, monorepos, multi-directory environments, and development trees dramatically faster.
 
