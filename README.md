@@ -54,7 +54,7 @@ Argument handling identical to cd
 
 Fuzzy matching and cycling
 
--l, -p, -c, -h
+`-l, -p, -c, -h`
 
 Auto-pruning of memory entries
 
@@ -84,10 +84,10 @@ Or open a new terminal.
 2. Optional: put it in a separate file
 
 If you want a cleaner `~/.bashrc`:
-
+```
     mkdir -p ~/.local/share/xcd
     cp xcd.bash ~/.local/share/xcd/xcd.bash
-
+```
 
 Then add to `~/.bashrc`:
 
@@ -103,11 +103,11 @@ Run:
 You should see the full help message.
 
 Try jumping around:
-
+```
     xcd /etc
     xcd
     xcd -l
-
+```
 
 Try fuzzy navigation:
 
@@ -115,11 +115,11 @@ Try fuzzy navigation:
 
 
 Try cycling:
-
+```
     xcd src
     xcd src
     xcd src
-
+```
 4. Removing / resetting
 
 At any time:
@@ -175,7 +175,7 @@ Place xcd.exe somewhere on your `PATH` — for example:
 2. Create `xcd.cmd`
 
 Place this file in the same directory as xcd.exe:
-
+```
     @echo off
     setlocal
 
@@ -193,15 +193,15 @@ Place this file in the same directory as xcd.exe:
 
     del "%TEMPFILE%" >nul 2>&1
     endlocal
-
+```
 
 Now you can:
-
+```
     xcd Backend
     xcd -l
     xcd -p Core
     xcd -c
-
+```
 
 just like on Linux.
 
