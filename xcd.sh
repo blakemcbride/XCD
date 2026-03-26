@@ -3,7 +3,7 @@
 xcd()
 {
     case "$1" in
-        -h|-c|-l|-p)
+        -h|-c|-l|-p|--help)
             xcd-core "$@"
             ;;
         *)

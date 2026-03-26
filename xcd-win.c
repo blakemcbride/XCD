@@ -206,7 +206,7 @@ int main(int argc, char **argv)
     {
         const char *arg1 = argv[1];
 
-        if (strcmp(arg1, "-h") == 0)
+        if (strcmp(arg1, "-h") == 0 ||  strcmp(arg1, "--help") == 0)
         {
             print_help();
             return 0;

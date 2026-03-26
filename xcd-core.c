@@ -171,17 +171,17 @@ static void cmd_help()
     printf(
         "xcd-core - core logic for xcd (Linux/macOS)\n\n"
         "Usage (called via shell wrapper):\n"
-        "  xcd-core                 Print canonical HOME directory.\n"
-        "  xcd-core DIR             Print canonical DIR if it exists.\n"
-        "  xcd-core SEGMENT         Fuzzy match remembered dirs by basename and\n"
+        "  xcd                 Print canonical HOME directory.\n"
+        "  xcd DIR             Print canonical DIR if it exists.\n"
+        "  xcd SEGMENT         Fuzzy match remembered dirs by basename and\n"
         "                           print the chosen target directory.\n"
         "\n"
         "Options (management / info; do NOT change directory):\n"
-        "  xcd-core -h              Show this help.\n"
-        "  xcd-core -l              List all remembered directories.\n"
-        "  xcd-core -l SEGMENT      List remembered dirs whose basename contains SEGMENT.\n"
-        "  xcd-core -p SEGMENT      Preview matches and which one would be used next.\n"
-        "  xcd-core -c              Clear the memory file (~/.xcd_memory).\n"
+        "  xcd -h              Show this help.\n"
+        "  xcd -l              List all remembered directories.\n"
+        "  xcd -l SEGMENT      List remembered dirs whose basename contains SEGMENT.\n"
+        "  xcd -p SEGMENT      Preview matches and which one would be used next.\n"
+        "  xcd -c              Clear the memory file (~/.xcd_memory).\n"
         "\n"
         "Note: wrappers should only 'cd' into the directory printed when\n"
         "no -h/-l/-p/-c option is used.\n"
@@ -392,7 +392,7 @@ int main(int argc, char **argv)
     {
         const char *arg1 = argv[1];
 
-        if (strcmp(arg1, "-h") == 0)
+        if (strcmp(arg1, "-h") == 0 || strcmp(arg1, "--help") == 0)
         {
             cmd_help();
             return 0;
